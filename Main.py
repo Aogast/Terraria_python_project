@@ -8,7 +8,7 @@ FPS = 50
 
 
 pygame.init()
-size = WIDTH, HEIGHT = 700, 700
+size = WIDTH, HEIGHT = 1024, 576
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 GRAVITY = 5
@@ -71,8 +71,8 @@ def load_level(filename):
     return list(map(lambda x: x.ljust(max_width, '.'), level_map))
 
 
-tile_images = {'wall': load_image('box.png'), 'empty': load_image('grass.png')}
-player_image = load_image('mar.png')
+tile_images = {'wall': load_image('grass.png')}
+player_image = load_image('trump.png')
 
 tile_width = tile_height = 50
 
@@ -104,12 +104,9 @@ def generate_level(level):
     new_player, x, y = None, None, None
     for y in range(len(level)):
         for x in range(len(level[y])):
-            # if level[y][x] == '.':
-            #     Tile('empty', x, y)
             if level[y][x] == '#':
                 Tile('wall', x, y)
             elif level[y][x] == '@':
-                # Tile('empty', x, y)
                 new_player = Player(x, y)
     return new_player, x, y
 
