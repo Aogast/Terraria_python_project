@@ -93,7 +93,6 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect().move(tile_width * pos_x + 15, tile_height * pos_y + 5)
 
 
-
 player = None
 
 all_sprites = pygame.sprite.Group()
