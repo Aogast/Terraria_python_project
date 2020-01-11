@@ -4,7 +4,7 @@ import sys
 import pygame
 
 
-FPS = 50
+FPS = 60
 
 
 pygame.init()
@@ -37,7 +37,7 @@ def start_screen():
                   "Для начала игры нажмите",
                   "ENTER"]
 
-    fon = pygame.transform.scale(load_image('fon.jpg'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('fon.jpeg'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 30)
     text_coord = 50
@@ -71,10 +71,10 @@ def load_level(filename):
     return list(map(lambda x: x.ljust(max_width, '.'), level_map))
 
 
-tile_images = {'wall': load_image('grass.png')}
+tile_images = {'wall': load_image('grow.png')}
 player_image = load_image('trump.png')
 
-tile_width = tile_height = 50
+tile_width = tile_height = 39
 
 
 class Tile(pygame.sprite.Sprite):
@@ -135,30 +135,33 @@ def play():
             if event.type == pygame.QUIT:
                 terminate()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP or event.key == \
+                if event.key == pygame.K_SPACE or event.key == \
                         pygame.K_DOWN or event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
                     q = event.key
                     f = True
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_UP or event.key == \
+                if event.key == pygame.K_SPACE or event.key == \
                         pygame.K_DOWN or event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
                     q = event.key
                     f = False
         if f:
-            if q == pygame.K_UP:
-                y = 10
+            if q == pygame.K_SPACE and y == 0 and pygame.sprite.spritecollideany(player, tiles_group):
+                y = 22
             if q == pygame.K_RIGHT:
                 x += 5
             if q == pygame.K_LEFT:
                 x = -5
         if not pygame.sprite.spritecollideany(player, tiles_group):
-            y -= GRAVITY
-
+            player.rect.y += GRAVITY
         screen.fill((0, 0, 0))
         all_sprites.draw(screen)
         player.rect.x += x
         player.rect.y -= y
-        x, y = 0, 0
+        y -= 1
+        print(y)
+        if y < 17:
+            y = 0
+        x = 0
         camera.update(player)
         for sprite in all_sprites:
             camera.apply(sprite)
