@@ -33,9 +33,9 @@ def terminate():
 
 
 def start_screen():
-    intro_text = ["Приветствую вас", "",
-                  "Для начала игры нажмите",
-                  "ENTER"]
+    intro_text = ["                               Приветствую вас", "",
+                  "                               Для начала игры нажмите",
+                  "                               ENTER"]
 
     fon = pygame.transform.scale(load_image('fon.jpeg'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
