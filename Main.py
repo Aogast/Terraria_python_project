@@ -71,8 +71,8 @@ def load_level(filename):
     return list(map(lambda x: x.ljust(max_width, '.'), level_map))
 
 
-tile_images = {'wall': load_image('box.png'), 'empty': load_image('grass.png')}
-player_image = load_image('mar.png')
+tile_images = {'wall': load_image('fon.jpeg'), 'empty': load_image('grass.png')}
+player_image = load_image('trump.png')
 
 tile_width = tile_height = 50
 
