@@ -87,9 +87,9 @@ class Tile(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, sheet, columns, rows):
         super().__init__(player_group, all_sprites)
-        self.image = player_image
         self.frames = []
         self.cut_sheet(sheet, columns, rows)
+        self.image = self.frames[0]
         self.cur_frame_right = 0
         self.cur_frame_left = 0
         self.pos_x = tile_width * pos_x + 15
@@ -107,14 +107,14 @@ class Player(pygame.sprite.Sprite):
 
     def update_right(self):
         self.cur_frame_right = 6 + ((self.cur_frame_right + 1) % 6)
-        self.image = self.frames[self.cur_frame_left]
+        self.image = self.frames[self.cur_frame_right]
 
     def update_left(self):
         self.cur_frame_left = 18 + ((self.cur_frame_left + 1) % 6)
-        self.image = self.frames[self.cur_frame_right]
+        self.image = self.frames[self.cur_frame_left]
 
     def update(self):
-        self.image = player_image
+        self.image = self.frames[0]
 
 
 player = None
@@ -178,21 +178,14 @@ def play():
         if not pygame.sprite.spritecollideany(player, tiles_group):
             player.rect.y += GRAVITY
         screen.fill((0, 0, 0))
-        # if x < 0:
-        #     player.update_right()
-        # elif x > 0:
-        #     player.update_left()
-        # else:
-        #     player.update()
         player.rect.x += x
         player.rect.y -= y
-        if x < 0:
-            player.update_right()
         if x > 0:
+            player.update_right()
+        if x < 0:
             player.update_left()
         if x == 0:
             player.update()
-        print(player.cur_frame_right, player.cur_frame_left)
 
         y -= 1
         if y < 20:
