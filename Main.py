@@ -71,9 +71,9 @@ def load_level(filename):
     return list(map(lambda x: x.ljust(max_width, '.'), level_map))
 
 
-tile_images = {'wall': load_image('grow.png'), '': load_image(''),
-               '': load_image(''), '': load_image(''),
-               '': load_image('')}
+tile_images = {'grow': load_image('grow.png'), 'grass': load_image('grass.png'),
+               'pech': load_image('pech.png'), 'verstac': load_image('verstac.png'),
+               'stone': load_image('stone.png'), 'stone2': load_image('stone2.png')}
 player_image = load_image('trump.png')
 
 tile_width = tile_height = 39
@@ -110,6 +110,14 @@ def generate_level(level):
                 Tile('wall', x, y)
             elif level[y][x] == '@':
                 new_player = Player(x, y)
+            elif level[y][x] == '*':
+                Tile('wall', x, y)
+            elif level[y][x] == '':
+                Tile('wall', x, y)
+            elif level[y][x] == '#':
+                Tile('wall', x, y)
+            elif level[y][x] == '#':
+                Tile('wall', x, y)
     return new_player, x, y
 
 
