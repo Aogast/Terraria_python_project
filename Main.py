@@ -71,8 +71,13 @@ def load_level(filename):
     return list(map(lambda x: x.ljust(max_width, '.'), level_map))
 
 
-tile_images = {'wall': load_image('grow.png')}
-player_image = load_image('trump.png')
+tile_images = {'grow': load_image('grow.png'), 'grass': load_image('grass.png'),
+               'pech': load_image('pech.png'), 'verstac': load_image('verstac.png'),
+               'stone': load_image('stone.png'), 'stone2': load_image('stone2.png'), 'tree': load_image('tree.png')}
+player_image = [load_image('trump.png'), load_image('trump_run (1).png'), load_image('trump_run (2).png'),
+                load_image('trump_run (4).png'), load_image('trump_run (5).png'), load_image('trump_run (6).png'),
+                load_image('trump_run (7).png'), load_image('trump_run (8).png'), load_image('trump_run (9).png'),
+                load_image('trump_run (11).png'), load_image('trump_run (13).png'), load_image('trump_run (15).png')]
 
 tile_width = tile_height = 39
 
@@ -85,10 +90,9 @@ class Tile(pygame.sprite.Sprite):
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y, sheet, columns, rows):
+    def __init__(self, pos_x, pos_y):
         super().__init__(player_group, all_sprites)
-        self.frames = []
-        self.cut_sheet(sheet, columns, rows)
+        self.frames = player_image
         self.image = self.frames[0]
         self.cur_frame_right = 0
         self.cur_frame_left = 0
@@ -96,21 +100,13 @@ class Player(pygame.sprite.Sprite):
         self.pos_y = tile_height * pos_y + 5
         self.rect = self.image.get_rect().move(tile_width * pos_x + 15, tile_height * pos_y + 5)
 
-    def cut_sheet(self, sheet, columns, rows):
-        self.rect = pygame.Rect(0, 0, sheet.get_width() // columns,
-                                sheet.get_height() // rows)
-        for j in range(rows):
-            for i in range(columns):
-                frame_location = (self.rect.w * i, self.rect.h * j)
-                self.frames.append(sheet.subsurface(pygame.Rect(
-                    frame_location, self.rect.size)))
-
     def update_right(self):
-        self.cur_frame_right = 6 + ((self.cur_frame_right + 1) % 6)
+        self.cur_frame_right = 1 + ((self.cur_frame_right + 1) % 5)
         self.image = self.frames[self.cur_frame_right]
 
     def update_left(self):
-        self.cur_frame_left = 18 + ((self.cur_frame_left + 1) % 6)
+        self.cur_frame_left = 7\
+                              + ((self.cur_frame_left + 1) % 5)
         self.image = self.frames[self.cur_frame_left]
 
     def update(self):
@@ -128,10 +124,18 @@ def generate_level(level):
     new_player, x, y = None, None, None
     for y in range(len(level)):
         for x in range(len(level[y])):
-            if level[y][x] == '#':
-                Tile('wall', x, y)
+            if level[y][x] == '%':
+                Tile('grass', x, y)
             elif level[y][x] == '@':
-                new_player = Player(x, y, load_image('trump_run.png'), 6, 4)
+                new_player = Player(x, y)
+            elif level[y][x] == '*':
+                Tile('tree', x, y)
+            elif level[y][x] == '{':
+                Tile('stone', x, y)
+            elif level[y][x] == '#':
+                Tile('grow', x, y)
+            elif level[y][x] == '/':
+                Tile('tree', x, y)
     return new_player, x, y
 
 
@@ -147,6 +151,10 @@ class Camera:
     def update(self, target):
         self.dx = -(target.rect.x + target.rect.w // 2 - WIDTH // 2)
         self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
+
+
+pygame.mixer.music.load('first.mp3')
+pygame.mixer.music.play()
 
 
 def play():
@@ -171,10 +179,14 @@ def play():
         if f:
             if q == pygame.K_SPACE and y == 0 and pygame.sprite.spritecollideany(player, tiles_group):
                 y = 25
-            if q == pygame.K_RIGHT:
+            player.rect.y -= 5
+            player_group.draw(screen)
+            if q == pygame.K_RIGHT and not pygame.sprite.spritecollideany(player, tiles_group):
                 x += 5
-            if q == pygame.K_LEFT:
+            if q == pygame.K_LEFT and not pygame.sprite.spritecollideany(player, tiles_group):
                 x = -5
+            player.rect.y += 5
+            player_group.draw(screen)
         if not pygame.sprite.spritecollideany(player, tiles_group):
             player.rect.y += GRAVITY
         screen.fill((0, 0, 0))
