@@ -3,7 +3,9 @@ import sys
 
 import pygame
 
-FPS = 40
+
+FPS = 60
+
 
 pygame.init()
 size = WIDTH, HEIGHT = 1024, 576
@@ -67,7 +69,7 @@ player_image = [load_image('trump.png'), load_image('trump_run (1).png'), load_i
                 load_image('trump_run (7).png'), load_image('trump_run (8).png'), load_image('trump_run (9).png'),
                 load_image('trump_run (11).png'), load_image('trump_run (13).png'), load_image('trump_run (15).png')]
 
-tile_width = tile_height = 39
+tile_width = tile_height = 50
 
 
 class Tile(pygame.sprite.Sprite):
@@ -141,8 +143,8 @@ class Camera:
         self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
 
 
-#pygame.mixer.music.load('first.mp3')
-#pygame.mixer.music.play()
+pygame.mixer.music.load('first.mp3')
+pygame.mixer.music.play()
 
 
 def play():
@@ -155,12 +157,12 @@ def play():
             if event.type == pygame.QUIT:
                 terminate()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE or event.key == \
+                if event.key == pygame.K_UP or event.key == \
                         pygame.K_DOWN or event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
                     q = event.key
                     f = True
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_SPACE or event.key == \
+                if event.key == pygame.K_UP or event.key == \
                         pygame.K_DOWN or event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
                     q = event.key
                     f = False
@@ -203,5 +205,4 @@ def play():
 player, level_x, level_y = generate_level(load_level('map.txt'))
 
 start_screen()
-choose_level()
 play()
