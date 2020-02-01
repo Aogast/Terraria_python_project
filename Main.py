@@ -61,6 +61,11 @@ def start_screen():
         clock.tick(FPS)
 
 
+def choose_level():
+    fon = pygame.transform.scale(load_image('ds.png'), (WIDTH, HEIGHT))
+    screen.blit(fon, (0, 0))
+
+
 def load_level(filename):
     filename = "data/" + filename
     with open(filename, 'r') as mapFile:
@@ -71,6 +76,9 @@ def load_level(filename):
     return list(map(lambda x: x.ljust(max_width, '.'), level_map))
 
 
+tile_images = {'grow': load_image('grow.png'), 'grass': load_image('grass.png'),
+               'pech': load_image('pech.png'), 'verstac': load_image('verstac.png'),
+               'stone': load_image('stone.png'), 'stone2': load_image('stone2.png'), 'tree': load_image('tree.png')}
 player_image = [load_image('trump.png'), load_image('trump_run (1).png'), load_image('trump_run (2).png'),
                 load_image('trump_run (4).png'), load_image('trump_run (5).png'), load_image('trump_run (6).png'),
                 load_image('trump_run (7).png'), load_image('trump_run (8).png'), load_image('trump_run (9).png'),
