@@ -1,5 +1,6 @@
 import os
 import sys
+import random
 
 import pygame
 
@@ -31,7 +32,7 @@ def terminate():
 
 
 def start_screen():
-    fon = pygame.transform.scale(load_image('loading....png'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('ds.png'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
     while True:
         for event in pygame.event.get():
@@ -190,6 +191,148 @@ def generate_level(level):
             elif level[y][x] == '/':
                 Tile('tree', x, y, x, y)
     return new_player, x, y
+
+class Enemy(pygame.sprite.Sprite):
+
+    def __init__(self):
+
+        super().__init__()
+
+        width = 30
+        height = 30
+        self.image = pygame.Surface([width, height])
+        self.image.fill(red)
+
+        # Set a reference to the image rect.
+        self.rect = self.image.get_rect()
+
+        # Set speed vector of player
+        self.change_x = random.randint(0, 576)
+        self.change_y = 600
+
+    def update(self):
+
+        self.rect.centerx += self.change_x
+        if self.rect.right <= 0 or self.rect.left >= 100:
+            self.change_x *= -1
+
+    def update(self):
+
+        self.rect.centerx += self.change_x
+        if self.rect.right <= 0 or self.rect.left >= 100:
+            self.change_x *= -1
+
+    def __init__(self):
+
+        super().__init__()
+
+        width = 30
+        height = 30
+        self.image = pygame.Surface([width, height])
+        self.image.fill(red)
+
+        # Set a reference to the image rect.
+        self.rect = self.image.get_rect()
+
+        # Set speed vector of player
+        self.change_x = random.randint(0, 576)
+        self.change_y = 600
+
+    def update(self):
+
+        self.rect.centerx += self.change_x
+        if self.rect.right <= 0 or self.rect.left >= 100:
+            self.change_x *= -1
+
+    def update(self):
+
+        self.rect.centerx += self.change_x
+        if self.rect.right <= 0 or self.rect.left >= 100:
+            self.change_x *= -1
+
+    def __init__(self):
+
+        super().__init__()
+
+        width = 30
+        height = 30
+        self.image = pygame.Surface([width, height])
+        self.image.fill(red)
+
+        # Set a reference to the image rect.
+        self.rect = self.image.get_rect()
+
+        # Set speed vector of player
+        self.change_x = random.randint(0, 576)
+        self.change_y = 600
+
+    def update(self):
+
+        self.rect.centerx += self.change_x
+        if self.rect.right <= 0 or self.rect.left >= 100:
+            self.change_x *= -1
+
+    def update(self):
+
+        self.rect.centerx += self.change_x
+        if self.rect.right <= 0 or self.rect.left >= 100:
+            self.change_x *= -1
+
+    def __init__(self):
+
+        super().__init__()
+
+        width = 30
+        height = 30
+        self.image = pygame.Surface([width, height])
+        self.image.fill(red)
+
+        # Set a reference to the image rect.
+        self.rect = self.image.get_rect()
+
+        # Set speed vector of player
+        self.change_x = random.randint(0, 576)
+        self.change_y = 600
+
+    def update(self):
+
+        self.rect.centerx += self.change_x
+        if self.rect.right <= 0 or self.rect.left >= 100:
+            self.change_x *= -1
+
+    def update(self):
+
+        self.rect.centerx += self.change_x
+        if self.rect.right <= 0 or self.rect.left >= 100:
+            self.change_x *= -1
+
+    def __init__(self):
+
+        super().__init__()
+
+        width = 30
+        height = 30
+        self.image = pygame.Surface([width, height])
+        self.image.fill(red)
+
+        # Set a reference to the image rect.
+        self.rect = self.image.get_rect()
+
+        # Set speed vector of player
+        self.change_x = random.randint(0, 576)
+        self.change_y = 600
+
+    def update(self):
+
+        self.rect.centerx += self.change_x
+        if self.rect.right <= 0 or self.rect.left >= 100:
+            self.change_x *= -1
+
+    def update(self):
+
+        self.rect.centerx += self.change_x
+        if self.rect.right <= 0 or self.rect.left >= 100:
+            self.change_x *= -1
 
 
 class Camera:
