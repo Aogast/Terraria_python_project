@@ -200,7 +200,7 @@ def play():
         clock.tick(FPS)
 
 
-player, level_x, level_y = generate_level(load_level('map.txt'))
+player, level_x, level_y = generate_level(load_level('map2.txt'))
 
 start_screen()
 play()
