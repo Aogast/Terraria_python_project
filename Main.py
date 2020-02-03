@@ -3,9 +3,7 @@ import sys
 
 import pygame
 
-
-FPS = 120
-
+FPS = 180
 
 pygame.init()
 size = WIDTH, HEIGHT = 1024, 576
@@ -33,23 +31,8 @@ def terminate():
 
 
 def start_screen():
-    intro_text = ["                               Приветствую вас", "",
-                  "                               Для начала игры нажмите",
-                  "                               ENTER"]
-
-    fon = pygame.transform.scale(load_image('fon.jpeg'), (WIDTH, HEIGHT))
+    fon = pygame.transform.scale(load_image('loading....png'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
-    font = pygame.font.Font(None, 30)
-    text_coord = 50
-    for line in intro_text:
-        string_rendered = font.render(line, 1, pygame.Color('black'))
-        intro_rect = string_rendered.get_rect()
-        text_coord += 10
-        intro_rect.top = text_coord
-        intro_rect.x = 10
-        text_coord += intro_rect.height
-        screen.blit(string_rendered, intro_rect)
-
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -76,9 +59,6 @@ def load_level(filename):
     return list(map(lambda x: x.ljust(max_width, '.'), level_map))
 
 
-tile_images = {'grow': load_image('grow.png'), 'grass': load_image('grass.png'),
-               'pech': load_image('pech.png'), 'verstac': load_image('verstac.png'),
-               'stone': load_image('stone.png'), 'stone2': load_image('stone2.png'), 'tree': load_image('tree.png')}
 player_image = [load_image('trump.png'), load_image('trump_run (1).png'), load_image('trump_run (2).png'),
                 load_image('trump_run (4).png'), load_image('trump_run (5).png'), load_image('trump_run (6).png'),
                 load_image('trump_run (7).png'), load_image('trump_run (8).png'), load_image('trump_run (9).png'),
@@ -86,11 +66,11 @@ player_image = [load_image('trump.png'), load_image('trump_run (1).png'), load_i
 
 tile_width = tile_height = 39
 tile_images = {'grow': pygame.transform.scale(load_image('grow.png'), (tile_width, tile_height)),
-               'grass': pygame.transform.scale(load_image('grass.png'), (tile_width, tile_height)),
-               'pech': pygame.transform.scale(load_image('pech.png'), (tile_width, tile_height)),
-               'verstac': pygame.transform.scale(load_image('verstac.png'), (tile_width, tile_height)),
-               'stone': pygame.transform.scale(load_image('stone.png'), (tile_width, tile_height)),
-               'stone2': pygame.transform.scale(load_image('stone2.png'), (tile_width, tile_height)),
+               'grass': pygame.transform.scale(load_image('grass.jpg'), (tile_width, tile_height)),
+               'pech': pygame.transform.scale(load_image('pech.jpg'), (tile_width, tile_height)),
+               'verstac': pygame.transform.scale(load_image('verstac.jpg'), (tile_width, tile_height)),
+               'stone': pygame.transform.scale(load_image('stone.jpg'), (tile_width, tile_height)),
+               'stone2': pygame.transform.scale(load_image('stone2.jpg'), (tile_width, tile_height)),
                'tree': pygame.transform.scale(load_image('tree.png'), (tile_width, tile_height))}
 
 
@@ -232,7 +212,7 @@ pygame.mixer.music.play()
 
 def play():
     global player, level_y, level_x, tiles_group, all_sprites, player_group
-    my_map = Map(load_level('map.txt'))
+    my_map = Map(load_level('map2.txt'))
     x = 0
     y = 0
     camera = Camera()
@@ -302,8 +282,7 @@ def play():
         clock.tick(FPS)
 
 
-player, level_x, level_y = generate_level(load_level('map.txt'))
-
+player, level_x, level_y = generate_level(load_level('map2.txt'))
 
 start_screen()
 play()
