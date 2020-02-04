@@ -4,7 +4,7 @@ import random
 
 import pygame
 
-FPS = 180
+FPS = 40
 
 pygame.init()
 size = WIDTH, HEIGHT = 1024, 576
@@ -31,16 +31,52 @@ def terminate():
     sys.exit()
 
 
+
+
 def start_screen():
+    intro_text = ['выбрать карту 1', 'выбрать карту 2', 'выбрать кату 3']
     fon = pygame.transform.scale(load_image('ds.png'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
+
+    color = pygame.Color(50, 150, 50)
+    pygame.draw.rect(screen, color, (565, 170, 170, 50), 0)
+
+    color = pygame.Color(50, 150, 50)
+    pygame.draw.rect(screen, color, (565, 300, 170, 50), 0)
+
+    color = pygame.Color(50, 150, 50)
+    pygame.draw.rect(screen, color, (565, 430, 170, 50), 0)
+
+    font = pygame.font.Font(None, 30)
+    text_coord = 60
+    for line in intro_text:
+        string_rendered = font.render(line, 1, pygame.Color('white'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 115
+        intro_rect.top = text_coord
+        intro_rect.x = 570
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
+
+
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == 13:
-                    return
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = pygame.mouse.get_pos()
+                map = 0
+                if x >= 565 and x <= 735:
+                    if y >= 170 and y <= 220:
+                        map = 1
+                        return map
+                    elif y >= 300 and y <= 350:
+                        map = 2
+                        return map
+                    elif y >= 430 and y<= 480:
+                        map = 3
+                        return map
         pygame.display.flip()
         clock.tick(FPS)
 
@@ -236,8 +272,14 @@ pygame.mixer.music.play()
 
 
 def play():
-    global player, level_y, level_x, tiles_group, all_sprites, player_group
-    my_map = Map(load_level('map2.txt'))
+    global player, level_y, level_x, tiles_group, all_sprites, player_group, map
+    if map == 1:
+        pass
+    elif map == 2:
+        my_map = Map(load_level('map2.txt'))
+    elif map == 3:
+        pass
+
     x = 0
     y = 0
     camera = Camera()
@@ -306,8 +348,8 @@ def play():
         pygame.display.flip()
         clock.tick(FPS)
 
-
-player, level_x, level_y = generate_level(load_level('map2.txt'))
+if map == 2:
+    player, level_x, level_y = generate_level(load_level('map2.txt'))
 
 start_screen()
 play()
