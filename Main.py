@@ -5,7 +5,7 @@ import random
 import pygame
 
 FPS = 40
-
+mapp = 0
 pygame.init()
 size = WIDTH, HEIGHT = 1024, 576
 screen = pygame.display.set_mode(size)
@@ -31,9 +31,8 @@ def terminate():
     sys.exit()
 
 
-
-
 def start_screen():
+    global mapp
     intro_text = ['выбрать карту 1', 'выбрать карту 2', 'выбрать кату 3']
     fon = pygame.transform.scale(load_image('ds.png'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
@@ -58,32 +57,24 @@ def start_screen():
         text_coord += intro_rect.height
         screen.blit(string_rendered, intro_rect)
 
-
-
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = pygame.mouse.get_pos()
-                map = 0
                 if x >= 565 and x <= 735:
                     if y >= 170 and y <= 220:
-                        map = 1
-                        return map
+                        mapp = 1
+                        return
                     elif y >= 300 and y <= 350:
-                        map = 2
-                        return map
-                    elif y >= 430 and y<= 480:
-                        map = 3
-                        return map
+                        mapp = 2
+                        return
+                    elif y >= 430 and y <= 480:
+                        mapp = 3
+                        return
         pygame.display.flip()
         clock.tick(FPS)
-
-
-def choose_level():
-    fon = pygame.transform.scale(load_image('ds.png'), (WIDTH, HEIGHT))
-    screen.blit(fon, (0, 0))
 
 
 def load_level(filename):
@@ -117,6 +108,7 @@ class Tile(pygame.sprite.Sprite):
         self.image = tile_images[tile_type]
         self.pos_x = x
         self.pos_y = y
+
         if f:
             self.rect = self.image.get_rect().move(pos_x, pos_y)
         else:
@@ -134,8 +126,9 @@ class Map:
         global tiles_group, all_sprites, player_group, player
         cout = 0
         coords = []
+        coords_player = [player.rect.x, player.rect.y]
         new_player, x, y = None, None, None
-        for m_sprite in all_sprites:
+        for m_sprite in tiles_group:
             coords.append([m_sprite.rect.x, m_sprite.rect.y, m_sprite.pos_x, m_sprite.pos_y])
         all_sprites = pygame.sprite.Group()
         tiles_group = pygame.sprite.Group()
@@ -148,8 +141,7 @@ class Map:
                     Tile('grass', coords[cout][0], coords[cout][1], coords[cout][2], coords[cout][3], 1)
                     cout += 1
                 elif self.map[y][x] == '@':
-                    new_player = Player(coords[cout][0], coords[cout][1], 1)
-                    cout += 1
+                    new_player = Player(coords_player[0], coords_player[1], 1)
                 elif self.map[y][x] == '*':
                     Tile('tree', coords[cout][0], coords[cout][1], coords[cout][2], coords[cout][3], 1)
                     cout += 1
@@ -228,10 +220,10 @@ def generate_level(level):
                 Tile('tree', x, y, x, y)
     return new_player, x, y
 
+
 class Enemy(pygame.sprite.Sprite):
 
     def __init__(self):
-
         super().__init__()
 
         width = 30
@@ -247,7 +239,6 @@ class Enemy(pygame.sprite.Sprite):
         self.change_y = 600
 
     def update(self):
-
         self.rect.centerx += self.change_x
         if self.rect.right <= 0 or self.rect.left >= 100:
             self.change_x *= -1
@@ -269,22 +260,24 @@ class Camera:
 
 pygame.mixer.music.load('first.mp3')
 pygame.mixer.music.play()
-
+class Fon(pygame.sprite.Sprite()):
+    
 
 def play():
-    global player, level_y, level_x, tiles_group, all_sprites, player_group, map
-    if map == 1:
-        pass
-    elif map == 2:
-        my_map = Map(load_level('map2.txt'))
-    elif map == 3:
-        pass
+    global player, level_y, level_x, tiles_group, all_sprites, player_group, mapp
 
+    if mapp == 1:
+        my_map = Map(load_level('map1.txt'))
+    elif mapp == 2:
+        my_map = Map(load_level('map2.txt'))
+    fonn = pygame.transform.scale(load_image('qqq.png'), (WIDTH, HEIGHT))
+    screen.blit(fonn, (0, 0))
     x = 0
     y = 0
     camera = Camera()
     f = False
     while True:
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
@@ -322,6 +315,7 @@ def play():
             player.rect.y += GRAVITY
         screen.fill((0, 0, 0))
         player, level_x, level_y, tiles_group, all_sprites, player_group = my_map.generete_new_level()
+        print(player.rect.x, player.rect.y)
         if x > 0:
             player.update_right()
         if x < 0:
@@ -348,8 +342,12 @@ def play():
         pygame.display.flip()
         clock.tick(FPS)
 
-if map == 2:
-    player, level_x, level_y = generate_level(load_level('map2.txt'))
 
 start_screen()
+
+if mapp == 1:
+    player, level_x, level_y = generate_level(load_level('map1.txt'))
+elif mapp == 2:
+    player, level_x, level_y = generate_level(load_level('map2.txt'))
+
 play()
