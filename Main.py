@@ -455,7 +455,7 @@ def play():
                     player.rect.y += 5
         mt[0] += 1
         day_time[0] += 1
-        if day_time[0] % 100 == 0:
+        if day_time[0] % 1000 == 0:
             day_time[1] += 1
             mt[1] += 1
             print(music[mt[1] % 2])
