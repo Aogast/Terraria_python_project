@@ -16,7 +16,6 @@ def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
     image = pygame.image.load(fullname)
     if colorkey:
-        print(colorkey)
         if colorkey == -1:
             colorkey = image.get_at((1, 1))
         image.set_colorkey(colorkey)
@@ -378,9 +377,9 @@ def play():
         if not pygame.sprite.spritecollideany(player, tiles_group):
             player.rect.y += GRAVITY
         screen.fill((0, 0, 0))
-        pl_inv = player.inventory, player.number_blok
+        pl_inv = player.inventory, player.number_blok, player.cur_frame_left, player.cur_frame_right
         player, tiles_group, all_sprites, player_group, coords_invent = my_map.generete_new_level()
-        player.inventory, player.number_blok = pl_inv
+        player.inventory, player.number_blok, player.cur_frame_left, player.cur_frame_right = pl_inv
         player.make_inventary(1, coords_invent)
         if x > 0:
             player.update_right()
