@@ -92,12 +92,16 @@ class Map:
         for i in level:
             self.map.append(list(i))
         self.info_destroy = [0, 0, 0]
+        self.info_create = [0, 0, 0]
+        self.ly = len(self.map)
+        self.lx = len(self.map[0])
 
     def generete_new_level(self):
         global tiles_group, all_sprites, player_group, player,\
             enemy, enemy_group, inventary_group
         cout = 0
         coords = []
+
         player_info = [player.rect.x, player.rect.y,
                        player.cur_frame_left, player.cur_frame_right]
         if enemy:
@@ -118,10 +122,15 @@ class Map:
             enemy.normal = 0
             enemy.rect.x = p_x
             enemy.rect.y = p_y
-        for y in range(len(self.map)):
-            for x in range(len(self.map[y])):
+        for y in range(self.ly):
+            for x in range(self.lx):
                 if self.info_destroy[2] == 1 and y == self.info_destroy[0] and x == self.info_destroy[1]:
                     cout += 1
+                if self.info_create[-1] == 1 and y == self.info_create[0] and x == self.info_create[1]:
+                    print(12)
+                    Tile(self.map[y][x], self.info_create[-2], self.info_create[-3],
+                         self.info_create[-4], self.info_create[-5], 1)
+                    continue
                 if self.map[y][x] == '%':
                     Tile('%', coords[cout][0], coords[cout][1], coords[cout][2], coords[cout][3], 1)
                     cout += 1
@@ -140,16 +149,17 @@ class Map:
                     Tile('*', coords[cout][0], coords[cout][1], coords[cout][2], coords[cout][3], 1)
                     cout += 1
         self.info_destroy = [0, 0, 0]
+        self.info_create = [0, 0, 0]
         player.cur_frame_left = player_info[2]
         player.cur_frame_right = player_info[3]
         return new_player, tiles_group, all_sprites, player_group, coords_invent
 
-    def destroy(self, pos):
+    def destroy_or_creating(self, pos):
+        a = list(player.inventory.keys())
         for m_sprite in tiles_group:
             if m_sprite.rect.x < pos[0] < m_sprite.rect.x + tile_width:
                 if m_sprite.rect.y < pos[1] < m_sprite.rect.y + tile_height:
                     if self.map[m_sprite.pos_y][m_sprite.pos_x] != '.':
-                        a = list(player.inventory.keys())
                         if self.map[m_sprite.pos_y][m_sprite.pos_x] in a:
                             player.inventory[self.map[m_sprite.pos_y][m_sprite.pos_x]] += 1
                         elif len(player.inventory) < 10:
@@ -158,6 +168,37 @@ class Map:
                                 tile_images[self.map[m_sprite.pos_y][m_sprite.pos_x]])
                         self.map[m_sprite.pos_y][m_sprite.pos_x] = '.'
                         self.info_destroy = [m_sprite.pos_y, m_sprite.pos_x, 1]
+            if player.number_blok != 0 and self.info_destroy[2] != 1:
+                if m_sprite.rect.x + tile_width > pos[0] > m_sprite.rect.x:
+                    if m_sprite.rect.y - tile_height < pos[1] < m_sprite.rect.y:
+                        if self.map[m_sprite.pos_y - 1][m_sprite.pos_x] == '.':
+                            self.map[m_sprite.pos_y - 1][m_sprite.pos_x] = a[player.number_blok]
+                            player.inventory[a[player.number_blok]] -= 1
+                            self.info_create = [m_sprite.pos_y - 1, m_sprite.pos_x,
+                                                m_sprite.rect.y - tile_height, m_sprite.rect.x, 1]
+                    elif m_sprite.rect.y + 2 * tile_height > pos[1] > m_sprite.rect.y + tile_height:
+                        if self.map[m_sprite.pos_y + 1][m_sprite.pos_x] == '.':
+                            self.map[m_sprite.pos_y + 1][m_sprite.pos_x] = a[player.number_blok]
+                            player.inventory[a[player.number_blok]] -= 1
+                            self.info_create = [m_sprite.pos_y + 1, m_sprite.pos_x,
+                                                m_sprite.rect.y + tile_height, m_sprite.rect.x, 1]
+                            return
+                elif m_sprite.rect.y + tile_width > pos[1] > m_sprite.rect.y:
+                    if m_sprite.rect.x - tile_height < pos[0] < m_sprite.rect.x:
+                        if self.map[m_sprite.pos_y][m_sprite.pos_x - 1] == '.':
+                            self.map[m_sprite.pos_y][m_sprite.pos_x - 1] = a[player.number_blok]
+                            player.inventory[a[player.number_blok]] -= 1
+                            self.info_create = [m_sprite.pos_y, m_sprite.pos_x - 1,
+                                                m_sprite.rect.y, m_sprite.rect.x - tile_width, 1]
+                    elif m_sprite.rect.x + 2 * tile_height > pos[0] > m_sprite.rect.x + tile_height:
+                        if self.map[m_sprite.pos_y][m_sprite.pos_x + 1] == '.':
+                            self.map[m_sprite.pos_y][m_sprite.pos_x + 1] = a[player.number_blok]
+                            player.inventory[a[player.number_blok]] -= 1
+                            self.info_create = [m_sprite.pos_y, m_sprite.pos_x + 1,
+                                                m_sprite.rect.y, m_sprite.rect.x + tile_width, 1]
+        if player.inventory[a[player.number_blok]] == 0:
+            del player.inventory[a[player.number_blok]]
+            player.number_blok -= 1
 
 
 class Player(pygame.sprite.Sprite):
@@ -166,7 +207,7 @@ class Player(pygame.sprite.Sprite):
         self.frames = player_image
         self.image = self.frames[0]
         self.cur_frame_right = 0
-        
+        self.number_blok = 0
         self.cur_frame_left = 0
         self.inventory = {'sword': 1}
         self.pos_x = tile_width * pos_x + 15
@@ -181,7 +222,7 @@ class Player(pygame.sprite.Sprite):
         a = list(self.inventory.keys())
         if f == 0:
             for i in range(len(a)):
-                Playerinventary(tile_images[a[i]], i, 0, f)
+                Playerinventary(tile_images[a[i]], i * 40, 0, f)
         elif f == 1:
             for i in range(len(a)):
                 Playerinventary(tile_images[a[i]], coords[i][0], coords[i][1], f)
@@ -213,9 +254,9 @@ class Enemy(pygame.sprite.Sprite):
 
     def coords(self, side):
         if side:
-            pos_x = random.randint(player.rect.x - 50, player.rect.x - 25)
+            pos_x = random.randint(player.rect.x - 150, player.rect.x - 100)
         else:
-            pos_x = random.randint(player.rect.x + 25, player.rect.x + 50)
+            pos_x = random.randint(player.rect.x + 100, player.rect.x + 150)
         pos_y = player.rect.y - 3
         return pos_x, pos_y
 
@@ -305,6 +346,11 @@ def play():
                         pygame.K_DOWN or event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
                     q = event.key
                     f = True
+                if event.key == pygame.K_1 or event.key == pygame.K_2 or event.key == pygame.K_3 or\
+                    event.key == pygame.K_4 or event.key == pygame.K_5 or event.key == pygame.K_6 or\
+                        event.key == pygame.K_7 or event.key == pygame.K_8:
+                    if len(list(player.inventory.keys())) >= event.key - 49:
+                        player.number_blok = event.key - 49
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE or event.key == \
                         pygame.K_DOWN or event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
@@ -313,8 +359,7 @@ def play():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 me = pygame.mouse.get_pressed()
                 if me[0] == 1:
-                    my_map.destroy(event.pos)
-
+                    my_map.destroy_or_creating(event.pos)
         if f:
             if q == pygame.K_SPACE and pygame.sprite.spritecollideany(player, tiles_group):
                 y = 20
@@ -333,9 +378,9 @@ def play():
         if not pygame.sprite.spritecollideany(player, tiles_group):
             player.rect.y += GRAVITY
         screen.fill((0, 0, 0))
-        pl_inv = player.inventory
+        pl_inv = player.inventory, player.number_blok
         player, tiles_group, all_sprites, player_group, coords_invent = my_map.generete_new_level()
-        player.inventory = pl_inv
+        player.inventory, player.number_blok = pl_inv
         player.make_inventary(1, coords_invent)
         if x > 0:
             player.update_right()
@@ -372,6 +417,10 @@ def play():
                 enemy.rect.y += GRAVITY
             enemy.rect.y -= 5
             enemy_group.draw(screen)
+            if pygame.sprite.spritecollideany(enemy, player_group):
+                if player.number_blok == 0:
+                    enemy = None
+                    count_enemy = [0, 1]
         camera.update(player)
         for sprite in tiles_group:
             camera.apply(sprite)
