@@ -94,6 +94,8 @@ player_image = [load_image('trump.png'), load_image('trump_run (1).png'), load_i
                 load_image('trump_run (4).png'), load_image('trump_run (5).png'), load_image('trump_run (6).png'),
                 load_image('trump_run (7).png'), load_image('trump_run (8).png'), load_image('trump_run (9).png'),
                 load_image('trump_run (11).png'), load_image('trump_run (13).png'), load_image('trump_run (15).png')]
+day_image = [pygame.transform.scale(load_image('day.png'), (WIDTH, HEIGHT)),
+             pygame.transform.scale(load_image('night.jpg'), (WIDTH, HEIGHT))]
 tile_width = tile_height = 39
 enemy_image = pygame.transform.scale(load_image('slime.jpg', 1), (tile_width, tile_height))
 game_over_image = pygame.transform.scale(load_image('gameover.png'), (WIDTH, HEIGHT))
@@ -163,7 +165,6 @@ class Map:
                 if self.info_destroy[2] == 1 and y == self.info_destroy[0] and x == self.info_destroy[1]:
                     cout += 1
                 if self.info_create[-1] == 1 and y == self.info_create[0] and x == self.info_create[1]:
-                    print(12)
                     Tile(self.map[y][x], self.info_create[-2], self.info_create[-3],
                          self.info_create[-4], self.info_create[-5], 1)
                     continue
@@ -339,20 +340,20 @@ class Camera:
         self.dx = -(target.rect.x + target.rect.w // 2 - WIDTH // 2)
         self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
 
-
-pygame.mixer.music.load('music.mp3')
-pygame.mixer.music.play()
+music = ['music.mp3', 'first.mp3']
 
 
 def play():
     global player, level_y, level_x, tiles_group, all_sprites, \
-        player_group, enemy, enemy_group, inventary_group, mapp
+        player_group, enemy, enemy_group, inventary_group, mapp, music
     if mapp == 1:
         my_map = Map(load_level('map1.txt'))
     elif mapp == 2:
         my_map = Map(load_level('map2.txt'))
     elif mapp == 3:
         my_map = Map(load_level('map3.txt'))
+    day_time = [0, 0]
+    mt = [0, 0]
     xp = 100
     x = 0
     y = 0
@@ -452,7 +453,15 @@ def play():
                         if pygame.sprite.spritecollideany(player, tiles_group):
                             player.rect.x += 40
                     player.rect.y += 5
-
+        mt[0] += 1
+        day_time[0] += 1
+        if day_time[0] % 100 == 0:
+            day_time[1] += 1
+            mt[1] += 1
+            print(music[mt[1] % 2])
+            pygame.mixer.music.load(music[mt[1] % 2])
+            pygame.mixer.music.play()
+        screen.blit(day_image[day_time[1] % 2], (0, 0))
         xp_text = 'ХP:' + str(xp) + '%'
         font = pygame.font.Font(None, 30)
         text_coord = 50
