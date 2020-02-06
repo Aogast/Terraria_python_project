@@ -386,7 +386,7 @@ def play():
                 if event.key == pygame.K_1 or event.key == pygame.K_2 or event.key == pygame.K_3 or \
                         event.key == pygame.K_4 or event.key == pygame.K_5 or event.key == pygame.K_6 or \
                         event.key == pygame.K_7 or event.key == pygame.K_8:
-                    if len(list(player.inventory.keys())) >= event.key - 49:
+                    if len(list(player.inventory.keys())) > event.key - 49:
                         player.number_blok = event.key - 49
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE or event.key == \
