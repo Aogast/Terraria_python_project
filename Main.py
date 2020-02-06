@@ -103,7 +103,10 @@ tile_images = {'#': pygame.transform.scale(load_image('grow.png'), (tile_width, 
                'verstac': pygame.transform.scale(load_image('verstac.jpg'), (tile_width, tile_height)),
                '{': pygame.transform.scale(load_image('stone.jpg'), (tile_width, tile_height)),
                'stone2': pygame.transform.scale(load_image('stone2.jpg'), (tile_width, tile_height)),
-               '*': pygame.transform.scale(load_image('tree.png'), (tile_width, tile_height)),
+               '*': pygame.transform.scale(load_image('listva.png'), (tile_width, tile_height)),
+               '/': pygame.transform.scale(load_image('tree.png'), (tile_width, tile_height)),
+               '^': pygame.transform.scale(load_image('sand.jpg'), (tile_width, tile_height)),
+               '$': pygame.transform.scale(load_image('snow.png'), (tile_width, tile_height)),
                'sword': load_image('sword.jpg')}
 
 
@@ -164,23 +167,11 @@ class Map:
                     Tile(self.map[y][x], self.info_create[-2], self.info_create[-3],
                          self.info_create[-4], self.info_create[-5], 1)
                     continue
-                if self.map[y][x] == '%':
-                    Tile('%', coords[cout][0], coords[cout][1], coords[cout][2], coords[cout][3], 1)
+                if self.map[y][x] in tile_images.keys():
+                    Tile(self.map[y][x], coords[cout][0], coords[cout][1], coords[cout][2], coords[cout][3], 1)
                     cout += 1
                 elif self.map[y][x] == '@':
                     new_player = Player(player_info[0], player_info[1], 1)
-                elif self.map[y][x] == '*':
-                    Tile('*', coords[cout][0], coords[cout][1], coords[cout][2], coords[cout][3], 1)
-                    cout += 1
-                elif self.map[y][x] == '{':
-                    Tile('{', coords[cout][0], coords[cout][1], coords[cout][2], coords[cout][3], 1)
-                    cout += 1
-                elif self.map[y][x] == '#':
-                    Tile('#', coords[cout][0], coords[cout][1], coords[cout][2], coords[cout][3], 1)
-                    cout += 1
-                elif self.map[y][x] == '/':
-                    Tile('*', coords[cout][0], coords[cout][1], coords[cout][2], coords[cout][3], 1)
-                    cout += 1
         self.info_destroy = [0, 0, 0]
         self.info_create = [0, 0, 0]
         player.cur_frame_left = player_info[2]
@@ -328,18 +319,10 @@ def generate_level(level):
     new_player, x, y = None, None, None
     for y in range(len(level)):
         for x in range(len(level[y])):
-            if level[y][x] == '%':
-                Tile('%', x, y, x, y)
+            if level[y][x] in tile_images.keys():
+                Tile(level[y][x], x, y, x, y)
             elif level[y][x] == '@':
                 new_player = Player(x, y)
-            elif level[y][x] == '*':
-                Tile('*', x, y, x, y)
-            elif level[y][x] == '{':
-                Tile('{', x, y, x, y)
-            elif level[y][x] == '#':
-                Tile('#', x, y, x, y)
-            elif level[y][x] == '/':
-                Tile('*', x, y, x, y)
     return new_player, x, y
 
 
@@ -368,6 +351,8 @@ def play():
         my_map = Map(load_level('map1.txt'))
     elif mapp == 2:
         my_map = Map(load_level('map2.txt'))
+    elif mapp == 3:
+        my_map = Map(load_level('map3.txt'))
     xp = 100
     x = 0
     y = 0
@@ -436,7 +421,7 @@ def play():
         if y < 15:
             y = 0
         x = 0
-        if count_enemy[0] == 10 and count_enemy[1]:
+        if count_enemy[0] == 500 and count_enemy[1]:
             count_enemy[1] = 0
             enemy = Enemy()
             if enemy.normal:
@@ -516,6 +501,8 @@ if mapp == 1:
     player, level_x, level_y = generate_level(load_level('map1.txt'))
 elif mapp == 2:
     player, level_x, level_y = generate_level(load_level('map2.txt'))
+elif mapp == 3:
+    player, level_x, level_y = generate_level(load_level('map3.txt'))
 
 play()
 game_over()
