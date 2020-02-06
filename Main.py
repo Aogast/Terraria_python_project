@@ -74,6 +74,7 @@ def start_screen():
         pygame.display.flip()
         clock.tick(FPS)
 
+
 def choose_level():
     fon = pygame.transform.scale(load_image('ds.png'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
@@ -129,7 +130,7 @@ class Map:
         self.lx = len(self.map[0])
 
     def generete_new_level(self):
-        global tiles_group, all_sprites, player_group, player,\
+        global tiles_group, all_sprites, player_group, player, \
             enemy, enemy_group, inventary_group
         cout = 0
         coords = []
@@ -361,7 +362,7 @@ pygame.mixer.music.play()
 
 
 def play():
-    global player, level_y, level_x, tiles_group, all_sprites,\
+    global player, level_y, level_x, tiles_group, all_sprites, \
         player_group, enemy, enemy_group, inventary_group, mapp
     if mapp == 1:
         my_map = Map(load_level('map1.txt'))
@@ -382,8 +383,8 @@ def play():
                         pygame.K_DOWN or event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
                     q = event.key
                     f = True
-                if event.key == pygame.K_1 or event.key == pygame.K_2 or event.key == pygame.K_3 or\
-                    event.key == pygame.K_4 or event.key == pygame.K_5 or event.key == pygame.K_6 or\
+                if event.key == pygame.K_1 or event.key == pygame.K_2 or event.key == pygame.K_3 or \
+                        event.key == pygame.K_4 or event.key == pygame.K_5 or event.key == pygame.K_6 or \
                         event.key == pygame.K_7 or event.key == pygame.K_8:
                     if len(list(player.inventory.keys())) >= event.key - 49:
                         player.number_blok = event.key - 49
@@ -518,4 +519,3 @@ elif mapp == 2:
 
 play()
 game_over()
-
