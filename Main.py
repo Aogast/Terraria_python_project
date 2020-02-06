@@ -518,3 +518,4 @@ elif mapp == 2:
 
 play()
 game_over()
+
