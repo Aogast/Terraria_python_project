@@ -365,7 +365,7 @@ def play():
                 terminate()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE or event.key == \
-                        pygame.K_DOWN or event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
+                        pygame.K_a or event.key == pygame.K_d:
                     q = event.key
                     f = True
                 if event.key == pygame.K_1 or event.key == pygame.K_2 or event.key == pygame.K_3 or \
@@ -375,7 +375,7 @@ def play():
                         player.number_blok = event.key - 49
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE or event.key == \
-                        pygame.K_DOWN or event.key == pygame.K_RIGHT or event.key == pygame.K_LEFT:
+                        pygame.K_a or event.key == pygame.K_d:
                     q = event.key
                     f = False
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -386,12 +386,12 @@ def play():
             if q == pygame.K_SPACE and pygame.sprite.spritecollideany(player, tiles_group):
                 y = 20
             player.rect.y -= 5
-            if q == pygame.K_RIGHT and not pygame.sprite.spritecollideany(player, tiles_group):
+            if q == pygame.K_d and not pygame.sprite.spritecollideany(player, tiles_group):
                 x += 10
                 player.rect.x += x
                 if pygame.sprite.spritecollideany(player, tiles_group):
                     player.rect.x -= 10
-            if q == pygame.K_LEFT and not pygame.sprite.spritecollideany(player, tiles_group):
+            if q == pygame.K_a and not pygame.sprite.spritecollideany(player, tiles_group):
                 x = -10
                 player.rect.x += x
                 if pygame.sprite.spritecollideany(player, tiles_group):
