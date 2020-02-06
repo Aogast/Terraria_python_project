@@ -61,8 +61,9 @@ player_image = [load_image('trump.png'), load_image('trump_run (1).png'), load_i
                 load_image('trump_run (4).png'), load_image('trump_run (5).png'), load_image('trump_run (6).png'),
                 load_image('trump_run (7).png'), load_image('trump_run (8).png'), load_image('trump_run (9).png'),
                 load_image('trump_run (11).png'), load_image('trump_run (13).png'), load_image('trump_run (15).png')]
-enemy_image = pygame.transform.scale(load_image('slime.jpg', 1), (40, 40))
 tile_width = tile_height = 39
+enemy_image = pygame.transform.scale(load_image('slime.jpg', 1), (tile_width, tile_height))
+game_over_image = pygame.transform.scale(load_image('gameover.png'), (WIDTH, HEIGHT))
 tile_images = {'#': pygame.transform.scale(load_image('grow.png'), (tile_width, tile_height)),
                '%': pygame.transform.scale(load_image('grass.jpg'), (tile_width, tile_height)),
                'pech': pygame.transform.scale(load_image('pech.jpg'), (tile_width, tile_height)),
@@ -331,6 +332,7 @@ def play():
     global player, level_y, level_x, tiles_group, all_sprites,\
         player_group, enemy, enemy_group, inventary_group
     my_map = Map(load_level('map2.txt'))
+    xp = 100
     x = 0
     y = 0
     camera = Camera()
@@ -420,6 +422,25 @@ def play():
                 if player.number_blok == 0:
                     enemy = None
                     count_enemy = [0, 1]
+                else:
+                    xp -= 10
+                    player.rect.x += 40
+                    player.rect.y -= 5
+                    if pygame.sprite.spritecollideany(player, tiles_group):
+                        player.rect.x -= 80
+                        if pygame.sprite.spritecollideany(player, tiles_group):
+                            player.rect.x += 40
+                    player.rect.y += 5
+
+        xp_text = 'ХP:' + str(xp) + '%'
+        font = pygame.font.Font(None, 30)
+        text_coord = 50
+        string_rendered = font.render(xp_text, 1, pygame.Color('White'))
+        xp_text = string_rendered.get_rect()
+        xp_text.top = text_coord
+        xp_text.x = 925
+        xp_text.y = 10
+        screen.blit(string_rendered, xp_text)
         camera.update(player)
         for sprite in tiles_group:
             camera.apply(sprite)
@@ -433,9 +454,29 @@ def play():
         inventary_group.draw(screen)
         pygame.display.flip()
         clock.tick(FPS)
+        if xp == 0:
+            return
+
+
+def game_over():
+    i = 0
+    running = True
+    color = pygame.Color('blue')
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        screen.fill(color)
+        screen.blit(game_over_image, (-1024 + i, 0))
+        if i < 1024:
+            i += 2
+        pygame.display.flip()
+        clock.tick(FPS)
 
 
 player, level_x, level_y = generate_level(load_level('map2.txt'))
 
 start_screen()
 play()
+game_over()
+
