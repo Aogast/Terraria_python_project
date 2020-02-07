@@ -34,7 +34,7 @@ def terminate():
 def start_screen():
     """This function is responsible for the start screen and for the selection of maps."""
     global mapp
-    intro_text = ['выбрать карту 1', 'выбрать карту 2', 'выбрать кату 3']
+    intro_text = ['выбрать карту 1', 'выбрать карту 2', 'выбрать карту 3']
     fon = pygame.transform.scale(load_image('ds.png'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
 
