@@ -5,7 +5,7 @@ import random
 import pygame
 
 FPS = 40
-mapp = 0
+mapp, flag = 0, 0
 pygame.init()
 size = WIDTH, HEIGHT = 1024, 576
 screen = pygame.display.set_mode(size)
@@ -71,6 +71,7 @@ def start_screen():
                     elif y >= 430 and y <= 480:
                         mapp = 3
                         return
+        print(mapp)
         pygame.display.flip()
         clock.tick(FPS)
 
@@ -108,8 +109,10 @@ tile_images = {'#': pygame.transform.scale(load_image('grow.png'), (tile_width, 
                '*': pygame.transform.scale(load_image('listva.png'), (tile_width, tile_height)),
                '/': pygame.transform.scale(load_image('tree.png'), (tile_width, tile_height)),
                '^': pygame.transform.scale(load_image('sand.jpg'), (tile_width, tile_height)),
-               '$': pygame.transform.scale(load_image('snow.png'), (tile_width, tile_height)),
-               'sword': load_image('sword.jpg')}
+               '&': pygame.transform.scale(load_image('snow.png'), (tile_width, tile_height)),
+               'sword': load_image('sword.jpg'),
+               '(': pygame.transform.scale(load_image('listva.png'), (tile_width, tile_height)),
+               '|': pygame.transform.scale(load_image('tree.png'), (tile_width, tile_height)), }
 
 
 class Tile(pygame.sprite.Sprite):
@@ -136,7 +139,7 @@ class Map:
 
     def generete_new_level(self):
         global tiles_group, all_sprites, player_group, player, \
-            enemy, enemy_group, inventary_group
+            enemy, enemy_group, inventary_group, flag
         cout = 0
         coords = []
 
@@ -173,6 +176,8 @@ class Map:
                     cout += 1
                 elif self.map[y][x] == '@':
                     new_player = Player(player_info[0], player_info[1], 1)
+
+        print(flag)
         self.info_destroy = [0, 0, 0]
         self.info_create = [0, 0, 0]
         player.cur_frame_left = player_info[2]
@@ -340,6 +345,9 @@ class Camera:
         self.dx = -(target.rect.x + target.rect.w // 2 - WIDTH // 2)
         self.dy = -(target.rect.y + target.rect.h // 2 - HEIGHT // 2)
 
+
+pygame.mixer.music.load('music.mp3')
+pygame.mixer.music.play()
 music = ['music.mp3', 'first.mp3']
 
 
