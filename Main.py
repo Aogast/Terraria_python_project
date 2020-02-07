@@ -372,6 +372,7 @@ class Camera:
 
 pygame.mixer.music.load('music.mp3')
 pygame.mixer.music.play()
+music = ['music.mp3', 'first.mp3']
 
 
 def play():
@@ -487,6 +488,8 @@ def play():
         day_time[0] += 1
         if day_time[0] % 1000 == 0:
             day_time[1] += 1
+            pygame.mixer.music.load(music[day_time[1] % 2])
+            pygame.mixer.music.play()
         screen.blit(day_image[day_time[1] % 2], (0, 0))
         xp_text = 'ХP:' + str(xp) + '%'
         font = pygame.font.Font(None, 30)
@@ -510,8 +513,6 @@ def play():
         inventory_group.draw(screen)
         pygame.display.flip()
         clock.tick(FPS)
-        for i in walls_group:
-            print(i.rect.x, i.rect.y, player.rect.x, player.rect.y)
         if xp == 0 or pygame.sprite.spritecollideany(player, walls_group):
             return
 
